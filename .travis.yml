@@ -1,5 +1,9 @@
 ---
+sudo: required
 language: c
+before-script:
+  - sudo apt-get update
+  - sudo apt-get install musl-tools
 script:
   - cd booker-init
   - make
