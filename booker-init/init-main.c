@@ -1,12 +1,39 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include <assert.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 const char *PATH_SUFFIX = "/.booker";
 
+/* test if a file exists */
+int
+exists(const char *path)
+{
+	return access(path, F_OK) > -1;
+}
+
+/* create the required directories and files for booker to work */
+int
+init(const char *path)
+{
+	if (exists(path)) {
+		fprintf(stderr, "%s is already initialized\n", path);
+		return 1;
+	}
+	assert(!mkdir(path, 0755));
+	return 0;
+}
+
+/* allocates memory for PATH, and then stores the default path in
+ * PATH
+ */
 void
-build_path(char **path) {
+default_path(char **path) {
 	char *home;
 	size_t home_len;
 
@@ -40,6 +67,6 @@ main(int argc, char **argv)
 	if (path)
 		printf("using provided path: %s\n", path);
 	else
-		build_path(&path);
-	return 0;
+		default_path(&path);
+	return init(path);
 }
