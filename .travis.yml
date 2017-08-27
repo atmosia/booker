@@ -1,9 +1,14 @@
 ---
 sudo: required
 language: c
+before_install:
+  - pip install --user cpp-coveralls
 install:
   - sudo apt-get update
   - sudo apt-get install musl-tools
 script:
   - cd booker-init
   - make
+  - make test
+after_success:
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'

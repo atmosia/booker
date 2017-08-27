@@ -2,10 +2,8 @@
 
 include ../config.mk
 
-INIT_SRC = init-main.c
-INIT_OBJ = ${INIT_SRC:.c=.o}
-
-OBJ = ${INIT_OBJ}
+SRC = init-main.c
+OBJ = ${SRC:.c=.o}
 
 all: options booker-init
 
@@ -14,14 +12,21 @@ options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
+	@echo "COV      = ${COV}"
 
 .c.o:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-booker-init: ${INIT_OBJ}
+booker-init: ${OBJ}
 	@echo CC -o $@
-	@${CC} -o $@ ${INIT_OBJ} ${LDFLAGS}
+	@${CC} -o $@ ${OBJ} ${LDFLAGS}
+
+test: all
+	@echo RUN booker-init
+	@./booker-init
+	@echo TEST booker-init
+	@${COV} ${SRC}
 
 clean:
 	@echo cleaning
