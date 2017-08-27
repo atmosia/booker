@@ -27,6 +27,10 @@ my @cmds = (
       verify    => \&fail,
       tests     => [["not create directory", sub { ! -d "$HOME/.booker" }]],
     },
+    { cmd       => ["./booker-init; ./booker-init"],
+      verify    => \&fail,
+      clean     => sub { rmdir("$HOME/.booker") },
+    },
 );
 
 my $exit = 0;
