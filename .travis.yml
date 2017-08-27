@@ -1,7 +1,7 @@
 ---
 sudo: required
 language: c
-before-script:
+before-install:
   - sudo apt-get update
   - sudo apt-get install musl-tools
 script:
