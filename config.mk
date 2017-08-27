@@ -13,5 +13,5 @@ CFLAGS = -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os \
 LDFLAGS = -static -lgcov --coverage
 
 # compiler
-CC = musl-gcc
+CC ?= musl-gcc
 COV = gcov
