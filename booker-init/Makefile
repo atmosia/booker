@@ -4,6 +4,7 @@ include ../config.mk
 
 SRC = init-main.c
 OBJ = ${SRC:.c=.o}
+TESTS = $(wildcard t/*.pl)
 
 all: options booker-init
 
@@ -23,13 +24,14 @@ booker-init: ${OBJ}
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 test: all
-	@echo RUN booker-init
-	@./booker-init
 	@echo TEST booker-init
+	@for test in ${TESTS}; do \
+		$$test; \
+	done
 	@${COV} ${SRC}
 
 clean:
 	@echo cleaning
 	@rm -f booker-init ${OBJ} *.gc{ov,da,no}
 
-.PHONY: all options clean
+.PHONY: all options test clean
