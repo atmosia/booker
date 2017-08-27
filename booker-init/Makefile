@@ -30,6 +30,6 @@ test: all
 
 clean:
 	@echo cleaning
-	@rm -f booker-init ${OBJ}
+	@rm -f booker-init ${OBJ} *.gc{ov,da,no}
 
 .PHONY: all options clean
