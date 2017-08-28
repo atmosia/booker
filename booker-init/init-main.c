@@ -9,19 +9,19 @@
 #include <string.h>
 #include <unistd.h>
 
-int exists(const char *path);
-void default_path(char **path);
-char *config_path(const char *base);
-int cp(const char *src, const char *dest);
-void create_config(const char *base);
-int init(const char *path);
+static int exists(const char *path);
+static void default_path(char **path);
+static char *config_path(const char *base);
+static int cp(const char *src, const char *dest);
+static void create_config(const char *base);
+static int init(const char *path);
 
-const char *CONFIG_PATH = "/config.ini";
-const char *DEFAULT_CONFIG = "resources/config.ini";
-const char *PATH_SUFFIX = "/.booker";
+static const char *CONFIG_PATH = "/config.ini";
+static const char *DEFAULT_CONFIG = "resources/config.ini";
+static const char *PATH_SUFFIX = "/.booker";
 
 /* test if a file exists */
-int
+static int
 exists(const char *path)
 {
 	return access(path, F_OK) > -1;
@@ -30,7 +30,7 @@ exists(const char *path)
 /* allocates memory for PATH, and then stores the default path in
  * PATH
  */
-void
+static void
 default_path(char **path)
 {
 	char *home;
@@ -48,7 +48,7 @@ default_path(char **path)
 /* Appends a config to the provided path, allocates a string that
  * must be freed by the caller
  */
-char*
+static char*
 config_path(const char *base)
 {
 	char *config;
@@ -64,7 +64,7 @@ config_path(const char *base)
 }
 
 /* copy SRC to DEST */
-int
+static int
 cp(const char *src, const char *dest)
 {
 	int in_fd, out_fd;
@@ -107,7 +107,7 @@ cp(const char *src, const char *dest)
 }
 
 /* Create the default configuration files in BASE */
-void
+static void
 create_config(const char *base)
 {
 	char *path;
@@ -123,7 +123,7 @@ create_config(const char *base)
 }
 
 /* create the required directories and files for booker to work */
-int
+static int
 init(const char *path)
 {
 	if (exists(path)) {
