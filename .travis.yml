@@ -8,7 +8,6 @@ install:
   - sudo apt-get install musl-tools
   - ./build_static_sqlite.sh
 script:
-  - cd booker-init
   # TODO: update this to link against libmusl
   - make CC=gcc test
 after_success:
