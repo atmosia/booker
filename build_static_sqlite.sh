@@ -7,5 +7,5 @@ pushd sqlite
 # TODO: remove unused features and link against libmusl
 ./configure
 make
-cp .libs/libsqlite3.a ..
+cp .libs/libsqlite3.a sqlite3.h ..
 popd

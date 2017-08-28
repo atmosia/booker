@@ -2,6 +2,7 @@
 
 include ../config.mk
 
+CPPFLAGS += -I..
 LDFLAGS += -L.. -lsqlite3
 
 SRC = init-main.c
