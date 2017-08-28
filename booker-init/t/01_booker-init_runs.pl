@@ -13,22 +13,30 @@ sub fail {
     !$_[0]
 }
 
+sub clean_dir {
+    my $tree = $_[0];
+    sub { rmtree($tree) }
+}
+
+sub test_files {
+    my $path = $_[0];
+    [["create directory", sub { -d "$path" }],
+     ["create config", sub { -f "$path/config.ini" }],
+    ]
+}
+
 my $HOME = $ENV{HOME};
 
 my @cmds = (
     { cmd       => ["./booker-init"],
       verify    => \&pass,
-      tests     => [["create directory", sub { -d "$HOME/.booker" }],
-                    ["create config", sub { -f "$HOME/.booker/config.ini" }],
-                   ],
-      clean     => sub { rmtree("$HOME/.booker") },
+      tests     => test_files("$HOME/.booker"),
+      clean     => clean_dir("$HOME/.booker"),
     },
     { cmd       => ["./booker-init", "-d", "test-path"],
       verify    => \&pass,
-      tests     => [["create directory", sub { -d "test-path" }],
-                    ["create config", sub { -f "test-path/config.ini" }],
-                   ],
-      clean     => sub { rmtree("test-path") }
+      tests     => test_files("test-path"),
+      clean     => clean_dir("test-path"),
     },
     { cmd       => ["./booker-init", "-d"],
       verify    => \&fail,
@@ -36,7 +44,7 @@ my @cmds = (
     },
     { cmd       => ["./booker-init; ./booker-init"],
       verify    => \&fail,
-      clean     => sub { rmtree("$HOME/.booker") },
+      clean     => clean_dir("$HOME/.booker"),
     },
 );
 
