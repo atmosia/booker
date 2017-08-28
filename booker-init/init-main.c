@@ -68,12 +68,14 @@ build_path(const char *base, const char *suffix)
 	return path;
 }
 
+/* generate the path for the config file from BASE */
 static char*
 config_path(const char *base)
 {
 	return build_path(base, CONFIG_PATH);
 }
 
+/* generate the path for the database file from BASE */
 static char*
 db_path(const char *base)
 {

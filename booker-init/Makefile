@@ -3,7 +3,7 @@
 include ../config.mk
 
 CPPFLAGS += -I..
-LDFLAGS += -L.. -lsqlite3
+LDFLAGS += -L.. -lsqlite3 -lpthread -ldl
 
 SRC = init-main.c
 OBJ = ${SRC:.c=.o}
@@ -35,6 +35,6 @@ test: all
 
 clean:
 	@echo cleaning
-	@rm -f booker-init ${OBJ} *.gc{ov,da,no}
+	@rm -f booker-init ${OBJ} *.gc??
 
 .PHONY: all options test clean
