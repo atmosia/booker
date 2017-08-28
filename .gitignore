@@ -58,6 +58,7 @@ dkms.conf
 
 # compiled files
 booker-init/booker-init
+booker-create-session/booker-create-session
 
 # vim files
 *.swp
