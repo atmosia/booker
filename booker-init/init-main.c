@@ -77,7 +77,7 @@ cp(const char *src, const char *dest)
 				strerror(errno));
 		return 0;
 	}
-	out_fd = open(dest, O_CREAT | O_WRONLY);
+	out_fd = open(dest, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
 	if (out_fd < 0) {
 		fprintf(stderr, "failed to open %s: %s\n", dest,
 				strerror(errno));
