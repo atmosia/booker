@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +46,7 @@ default_path(char **path)
 	printf("using default path: %s\n", *path);
 }
 
-/* Appends a config to the provided path, allocates a string that
+/* appends a config to the provided path, allocates a string that
  * must be freed by the caller
  */
 static char*
@@ -106,7 +107,7 @@ cp(const char *src, const char *dest)
 	return 1;
 }
 
-/* Create the default configuration files in BASE */
+/* create the default configuration files in BASE */
 static void
 create_config(const char *base)
 {

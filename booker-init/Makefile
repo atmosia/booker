@@ -2,6 +2,8 @@
 
 include ../config.mk
 
+LDFLAGS += -L.. -lsqlite3
+
 SRC = init-main.c
 OBJ = ${SRC:.c=.o}
 TESTS = $(wildcard t/*.pl)
