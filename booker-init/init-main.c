@@ -12,12 +12,16 @@
 
 static int exists(const char *path);
 static void default_path(char **path);
+static char *build_path(const char *base, const char *suffix);
 static char *config_path(const char *base);
+static char *db_path(const char *base);
 static int cp(const char *src, const char *dest);
 static void create_config(const char *base);
+static void create_db(const char *base);
 static int init(const char *path);
 
 static const char *CONFIG_PATH = "/config.ini";
+static const char *DB_PATH = "/db.sqlite3";
 static const char *DEFAULT_CONFIG = "resources/config.ini";
 static const char *PATH_SUFFIX = "/.booker";
 
@@ -46,22 +50,34 @@ default_path(char **path)
 	printf("using default path: %s\n", *path);
 }
 
-/* appends a config to the provided path, allocates a string that
+/* appends SUFFIX to the PATH, allocates a string that
  * must be freed by the caller
  */
 static char*
-config_path(const char *base)
+build_path(const char *base, const char *suffix)
 {
-	char *config;
+	char *path;
 	size_t base_len;
 
 	base_len = strlen(base);
-	config = malloc(base_len + strlen(CONFIG_PATH) + 1);
-	assert(config);
-	strncpy(config, base, base_len);
-	strncpy(config + base_len, CONFIG_PATH, strlen(CONFIG_PATH));
+	path = malloc(base_len + strlen(suffix) + 1);
+	assert(path);
+	strncpy(path, base, base_len);
+	strncpy(path + base_len, suffix, strlen(suffix));
 
-	return config;
+	return path;
+}
+
+static char*
+config_path(const char *base)
+{
+	return build_path(base, CONFIG_PATH);
+}
+
+static char*
+db_path(const char *base)
+{
+	return build_path(base, DB_PATH);
 }
 
 /* copy SRC to DEST */
@@ -123,6 +139,24 @@ create_config(const char *base)
 	free(path);
 }
 
+/* create the default db in BASE */
+static void
+create_db(const char *base)
+{
+	sqlite3 *db;
+	char *path;
+
+	path = db_path(base);
+	printf("creating a database at %s\n", path);
+	if (sqlite3_open(path, &db)) {
+		fprintf(stderr, "failed to open %s: %s\n", path,
+				sqlite3_errmsg(db));
+		sqlite3_close(db);
+		abort();
+	}
+	sqlite3_close(db);
+}
+
 /* create the required directories and files for booker to work */
 static int
 init(const char *path)
@@ -133,7 +167,7 @@ init(const char *path)
 	}
 	assert(!mkdir(path, 0755));
 	create_config(path);
-	// TODO: create database
+	create_db(path);
 	return 0;
 }
 

@@ -22,6 +22,7 @@ sub test_files {
     my $path = $_[0];
     [["create directory", sub { -d "$path" }],
      ["create config", sub { -f "$path/config.ini" }],
+     ["create db", sub { -f "$path/db.sqlite3" }],
     ]
 }
 
