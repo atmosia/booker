@@ -1,6 +1,9 @@
 #!/usr/bin/env perl
 
+use v5.010;
 use strict;
+
+use File::Path qw(rmtree);
 
 sub pass {
     $_[0]
@@ -15,13 +18,17 @@ my $HOME = $ENV{HOME};
 my @cmds = (
     { cmd       => ["./booker-init"],
       verify    => \&pass,
-      tests     => [["create directory", sub { -d "$HOME/.booker" }]],
-      clean     => sub { rmdir("$HOME/.booker") },
+      tests     => [["create directory", sub { -d "$HOME/.booker" }],
+                    ["create config", sub { -f "$HOME/.booker/config.ini" }],
+                   ],
+      clean     => sub { rmtree("$HOME/.booker") },
     },
     { cmd       => ["./booker-init", "-d", "test-path"],
       verify    => \&pass,
-      tests     => [["create directory", sub { -d "test-path" }]],
-      clean     => sub { rmdir("test-path") }
+      tests     => [["create directory", sub { -d "test-path" }],
+                    ["create config", sub { -f "test-path/config.ini" }],
+                   ],
+      clean     => sub { rmtree("test-path") }
     },
     { cmd       => ["./booker-init", "-d"],
       verify    => \&fail,
@@ -29,7 +36,7 @@ my @cmds = (
     },
     { cmd       => ["./booker-init; ./booker-init"],
       verify    => \&fail,
-      clean     => sub { rmdir("$HOME/.booker") },
+      clean     => sub { rmtree("$HOME/.booker") },
     },
 );
 
