@@ -2,7 +2,8 @@
 sudo: required
 language: c
 cache:
-  directories:
+  - pip
+  - directories:
     - lib
     - include
 before_install:
