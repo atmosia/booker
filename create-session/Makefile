@@ -1,18 +1,21 @@
-# booker-init: initialize booker
+# booker-create-session: start a session for booker
 
 include ../config.mk
+
+APP = create-session
+NAME = ${APP_PREFIX}-${APP}
 
 CPPFLAGS += -I..
 LDFLAGS += -L.. -lsqlite3 -lpthread -ldl
 
-SRC = init-main.c
+SRC = main.c
 OBJ = ${SRC:.c=.o}
 TESTS = $(wildcard t/*.pl)
 
-all: options booker-init
+all: options ${NAME}
 
 options:
-	@echo booker-init build options:
+	@echo ${NAME} build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
@@ -22,12 +25,12 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-booker-init: ${OBJ}
+${NAME}: ${OBJ}
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 test: all
-	@echo TEST booker-init
+	@echo TEST ${NAME}
 	@for test in ${TESTS}; do \
 		$$test; \
 	done
@@ -35,6 +38,6 @@ test: all
 
 clean:
 	@echo cleaning
-	@rm -f booker-init ${OBJ} *.gc??
+	@rm -f ${NAME} ${OBJ} *.gc??
 
 .PHONY: all options test clean

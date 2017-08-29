@@ -1,7 +1,9 @@
-all:
-	$(MAKE) -C booker-init
-	$(MAKE) -C booker-create-session
+TARGETS := all test clean
+DIRS := $(wildcard */.)
 
-test:
-	$(MAKE) -C booker-init test
-	$(MAKE) -C booker-create-session test
+${TARGETS}: ${DIRS}
+
+${DIRS}:
+	$(MAKE) -C $@ ${MAKECMDGOALS}
+
+.PHONY: ${TARGETS} ${DIRS}

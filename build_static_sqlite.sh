@@ -9,3 +9,4 @@ pushd sqlite
 make
 cp .libs/libsqlite3.a sqlite3.h ..
 popd
+rm -rf sqlite

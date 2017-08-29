@@ -1,5 +1,6 @@
-# sis version
+# booker version
 VERSION = 0.1
+APP_PREFIX = booker
 
 # paths
 PREFIX = /usr/local
