@@ -2,8 +2,9 @@
 sudo: required
 language: c
 cache:
-  - lib
-  - include
+  directories:
+    - lib
+    - include
 before_install:
   - pip install --user cpp-coveralls
 install:
