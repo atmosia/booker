@@ -3,4 +3,4 @@
 use v5.010;
 use strict;
 
-use File::Path qw(rmtree);
+exit system('./booker-create-session');

@@ -57,8 +57,12 @@ Mkfile.old
 dkms.conf
 
 # compiled files
-booker-init/booker-init
-booker-create-session/booker-create-session
+init/booker-init
+create-session/booker-create-session
 
 # vim files
 *.swp
+
+# dependency files
+lib
+include

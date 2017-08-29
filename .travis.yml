@@ -1,6 +1,9 @@
 ---
 sudo: required
 language: c
+cache:
+  - lib
+  - include
 before_install:
   - pip install --user cpp-coveralls
 install:

@@ -1,9 +1,9 @@
 TARGETS := all test clean
-DIRS := $(wildcard */.)
+PROJECTS := init create-session
 
-${TARGETS}: ${DIRS}
+${TARGETS}: ${PROJECTS}
 
-${DIRS}:
+${PROJECTS}:
 	$(MAKE) -C $@ ${MAKECMDGOALS}
 
-.PHONY: ${TARGETS} ${DIRS}
+.PHONY: ${TARGETS} ${PROJECTS}

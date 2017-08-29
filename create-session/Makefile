@@ -5,8 +5,8 @@ include ../config.mk
 APP = create-session
 NAME = ${APP_PREFIX}-${APP}
 
-CPPFLAGS += -I..
-LDFLAGS += -L.. -lsqlite3 -lpthread -ldl
+CPPFLAGS += -I../include
+LDFLAGS += -L../lib -lsqlite3 -lpthread -ldl
 
 SRC = main.c
 OBJ = ${SRC:.c=.o}
