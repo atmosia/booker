@@ -8,3 +8,10 @@ Each project should have a `Makefile` in its build directory, all of which
 use `config.mk` in the root directory for common build options. If a static
 version of `libsqlite3` is not present on your system then your can run
 `build_static_sqlite.sh` to fetch and build one.
+
+# Contributing
+
+We are attempting to adhere to the
+[suckless philosophy](http://suckless.org/philosophy)
+and
+[coding style](http://suckless.org/coding_style).
