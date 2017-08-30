@@ -1,5 +1,5 @@
 TARGETS := all test clean
-PROJECTS := init create-session
+PROJECTS := init create-session common
 
 ${TARGETS}: ${PROJECTS}
 

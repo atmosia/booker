@@ -2,6 +2,7 @@
 
 use v5.010;
 use strict;
+use warnings;
 
 use File::Path qw(rmtree);
 

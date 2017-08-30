@@ -1,8 +1,38 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../common/db.h"
+#include "../common/path.h"
+#include "../common/session.h"
 
 int
 main(int argc, char **argv)
 {
-	printf("hello, world\n");
+	int i;
+	char *path;
+
+	path = NULL;
+	for (i = 1; i < argc; i++) {
+		if (!strncmp(argv[i], "-d", 2)) {
+			i++;
+			if (i >= argc) {
+				fprintf(stderr, "no argument for -d\n");
+				exit(1);
+			}
+			path = argv[i];
+		}
+	}
+
+	if (path)
+		printf("using provided path: %s\n", path);
+	else
+		default_path(&path);
+
+	sqlite3 *db = default_db(path);
+	if (valid_session(db)) {
+		fprintf(stderr, "session already open\n");
+		exit(1);
+	}
 	return 0;
 }

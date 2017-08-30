@@ -10,77 +10,14 @@
 #include <string.h>
 #include <unistd.h>
 
-static int exists(const char *path);
-static void default_path(char **path);
-static char *build_path(const char *base, const char *suffix);
-static char *config_path(const char *base);
-static char *db_path(const char *base);
+#include "../common/path.h"
+
+static const char *DEFAULT_CONFIG = "resources/config.ini";
+
 static int cp(const char *src, const char *dest);
 static void create_config(const char *base);
 static void create_db(const char *base);
 static int init(const char *path);
-
-static const char *CONFIG_PATH = "/config.ini";
-static const char *DB_PATH = "/db.sqlite3";
-static const char *DEFAULT_CONFIG = "resources/config.ini";
-static const char *PATH_SUFFIX = "/.booker";
-
-/* test if a file exists */
-static int
-exists(const char *path)
-{
-	return access(path, F_OK) > -1;
-}
-
-/* allocates memory for PATH, and then stores the default path in
- * PATH
- */
-static void
-default_path(char **path)
-{
-	char *home;
-	size_t home_len;
-
-	home = getenv("HOME");
-	home_len = strlen(home);
-	*path = malloc(home_len + strlen(PATH_SUFFIX) + 1);
-	assert(path);
-	strncpy(*path, home, home_len);
-	strncpy(*path + home_len, PATH_SUFFIX, strlen(PATH_SUFFIX));
-	printf("using default path: %s\n", *path);
-}
-
-/* appends SUFFIX to the PATH, allocates a string that
- * must be freed by the caller
- */
-static char*
-build_path(const char *base, const char *suffix)
-{
-	char *path;
-	size_t base_len;
-
-	base_len = strlen(base);
-	path = malloc(base_len + strlen(suffix) + 1);
-	assert(path);
-	strncpy(path, base, base_len);
-	strncpy(path + base_len, suffix, strlen(suffix));
-
-	return path;
-}
-
-/* generate the path for the config file from BASE */
-static char*
-config_path(const char *base)
-{
-	return build_path(base, CONFIG_PATH);
-}
-
-/* generate the path for the database file from BASE */
-static char*
-db_path(const char *base)
-{
-	return build_path(base, DB_PATH);
-}
 
 /* copy SRC to DEST */
 static int
@@ -184,7 +121,7 @@ main(int argc, char **argv)
 		if (!strncmp(argv[i], "-d", 2)) {
 			i++;
 			if (i >= argc) {
-				fprintf(stderr, "no argument for -p\n");
+				fprintf(stderr, "no argument for -d\n");
 				exit(1);
 			}
 			path = argv[i];
