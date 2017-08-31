@@ -4,7 +4,7 @@ Open source POS software
 
 # Building
 
-*tl;dr* Run `make test` in the checkout.
+**tl;dr** Run `make test` in the checkout.
 
 There is a central `Makefile` which can be used to build the whole project.
 Each project should have a `Makefile` in its build directory, all of which
