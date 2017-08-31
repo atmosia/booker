@@ -15,3 +15,4 @@ We are attempting to adhere to the
 [suckless philosophy](http://suckless.org/philosophy)
 and
 [coding style](http://suckless.org/coding_style).
+You can normally find one of us on `#booker` on `irc.freenode.net`.
