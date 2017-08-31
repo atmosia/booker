@@ -9,7 +9,7 @@ before_install:
   - pip install --user cpp-coveralls
 install:
   - sudo apt-get update
-  - sudo apt-get install musl-tools
+  - sudo apt-get install musl-tools libdbd-sqlite3-perl
   - ./build_static_sqlite.sh
 script:
   # TODO: update this to link against libmusl
