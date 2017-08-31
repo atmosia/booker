@@ -34,5 +34,7 @@ main(int argc, char **argv)
 		fprintf(stderr, "session already open\n");
 		exit(1);
 	}
+
+	// TODO: open session
 	return 0;
 }

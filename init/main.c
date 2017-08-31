@@ -84,6 +84,7 @@ create_db(const char *base)
 {
 	sqlite3 *db;
 	char *path;
+	int rc;
 
 	path = db_path(base);
 	printf("creating a database at %s\n", path);
@@ -93,6 +94,16 @@ create_db(const char *base)
 		sqlite3_close(db);
 		abort();
 	}
+	rc = sqlite3_exec(db,
+			"CREATE TABLE session ("
+				"start TIMESTAMP NOT NULL,"
+				"end TIMESTAMP"
+				")",
+			NULL,
+			NULL,
+			NULL);
+	assert(rc == SQLITE_OK);
+
 	sqlite3_close(db);
 }
 
