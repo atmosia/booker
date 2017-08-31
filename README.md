@@ -4,6 +4,9 @@ Open source POS software
 
 # Building
 
+tl;dr Run `make test` in the checkout.
+
+There is a central `Makefile` which can be used to build the whole project.
 Each project should have a `Makefile` in its build directory, all of which
 use `config.mk` in the root directory for common build options. If a static
 version of `libsqlite3` is not present on your system then your can run

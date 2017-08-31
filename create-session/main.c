@@ -42,6 +42,9 @@ main(int argc, char **argv)
 		break;
 	} ARGEND;
 
+	if (user_count < 1)
+		eprintf("no user provided\n");
+
 	if (path)
 		printf("using provided path: %s\n", path);
 	else
@@ -52,7 +55,7 @@ main(int argc, char **argv)
 		eprintf("session already open\n");
 
 	session_id = create_session(db);
-	for (i = 0; i < MAX_USERS; i++)
+	for (i = 0; i < user_count; i++)
 		add_user_to_session(db, session_id, users[i]);
 	return 0;
 }
