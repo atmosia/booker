@@ -4,12 +4,12 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
+#include "../common/db.h"
 #include "../common/path.h"
 
 static const char *DEFAULT_CONFIG = "resources/config.ini";
@@ -84,7 +84,6 @@ create_db(const char *base)
 {
 	sqlite3 *db;
 	char *path;
-	int rc;
 
 	path = db_path(base);
 	printf("creating a database at %s\n", path);
@@ -94,15 +93,18 @@ create_db(const char *base)
 		sqlite3_close(db);
 		abort();
 	}
-	rc = sqlite3_exec(db,
-			"CREATE TABLE session ("
-				"start TIMESTAMP NOT NULL,"
-				"end TIMESTAMP"
-				")",
-			NULL,
-			NULL,
-			NULL);
-	assert(rc == SQLITE_OK);
+	db_exec(db,
+		"CREATE TABLE session ("
+			"start TIMESTAMP NOT NULL,"
+			"end TIMESTAMP"
+		")");
+	db_exec(db,
+		"CREATE TABLE session_user ("
+			"session_id INTEGER,"
+			"user TEXT,"
+			"FOREIGN KEY (session_id) REFERENCES session(rowid),"
+			"PRIMARY KEY (session_id, user)"
+		")");
 
 	sqlite3_close(db);
 }

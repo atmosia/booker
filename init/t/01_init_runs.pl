@@ -29,6 +29,7 @@ sub test_files {
 
 my $HOME = $ENV{HOME};
 
+# TODO: test table creation
 my @cmds = (
     { cmd       => ["./booker-init"],
       verify    => \&pass,

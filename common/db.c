@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 
 #include "db.h"
@@ -17,4 +18,9 @@ default_db(const char *base)
 	}
 
 	return db;
+}
+
+void
+db_exec(sqlite3 *db, const char *stmt) {
+	assert(sqlite3_exec(db, stmt, NULL, NULL, NULL) == SQLITE_OK);
 }

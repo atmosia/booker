@@ -14,6 +14,7 @@ main(int argc, char **argv)
 
 	path = NULL;
 	for (i = 1; i < argc; i++) {
+		// TODO: parse -u option to read in users
 		if (!strncmp(argv[i], "-d", 2)) {
 			i++;
 			if (i >= argc) {
