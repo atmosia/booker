@@ -23,10 +23,10 @@ chdir($cd);
 $exit++ if system("./booker-create-session", "-d", "test-path");
 rmtree("test-path");
 
-chdir("../init");
-system("./booker-init", "-d", "../create-session/test-path");
-chdir($cd);
 $exit++ unless system("./booker-create-session", "-d");
+rmtree("test-path");
+
+$exit++ unless system("./booker-create-session", "-d", "");
 rmtree("test-path");
 
 exit $exit;

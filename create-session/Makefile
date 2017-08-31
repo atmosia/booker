@@ -3,7 +3,8 @@
 APP = create-session
 
 SRC = main.c
-EXTERN_OBJ = "../common/session.o" "../common/db.o" "../common/path.o"
+EXTERN_OBJ = "../common/db.o" "../common/eprintf.o" "../common/path.o" \
+	     "../common/session.o"
 
 include ../config.mk
 include ../default.mk
