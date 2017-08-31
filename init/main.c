@@ -9,15 +9,17 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "../common/arg.h"
 #include "../common/db.h"
 #include "../common/path.h"
+#include "../common/util.h"
 
 static const char *DEFAULT_CONFIG = "resources/config.ini";
 
 static int cp(const char *src, const char *dest);
 static void create_config(const char *base);
 static void create_db(const char *base);
-static int init(const char *path);
+static void init(const char *path);
 
 /* copy SRC to DEST */
 static int
@@ -70,11 +72,9 @@ create_config(const char *base)
 
 	path = config_path(base);
 	printf("copying %s to %s\n", DEFAULT_CONFIG, path);
-	if(!cp(DEFAULT_CONFIG, path)) {
-		fprintf(stderr, "failed to copy default configuration(%s) "
-				"to %s\n", DEFAULT_CONFIG, path);
-		exit(1);
-	}
+	if(!cp(DEFAULT_CONFIG, path))
+		eprintf("failed to copy default configuration(%s) to %s\n",
+				DEFAULT_CONFIG, path);
 	free(path);
 }
 
@@ -110,40 +110,45 @@ create_db(const char *base)
 }
 
 /* create the required directories and files for booker to work */
-static int
+static void
 init(const char *path)
 {
-	if (exists(path)) {
-		fprintf(stderr, "%s is already initialized\n", path);
-		return 1;
-	}
+	if (exists(path))
+		eprintf("%s is already initialized\n", path);
 	assert(!mkdir(path, 0755));
 	create_config(path);
 	create_db(path);
-	return 0;
+}
+
+/* prints the usage information */
+static void
+usage(void)
+{
+	eprintf("usage: %s [-h] [-d DIR]\n", argv0);
 }
 
 int
 main(int argc, char **argv)
 {
-	int i;
 	char *path;
 
 	path = NULL;
-	for (i = 1; i < argc; i++) {
-		if (!strncmp(argv[i], "-d", 2)) {
-			i++;
-			if (i >= argc) {
-				fprintf(stderr, "no argument for -d\n");
-				exit(1);
-			}
-			path = argv[i];
-		}
-	}
+	ARGBEGIN {
+	case 'd':
+		path = EARGF(usage());
+		if (!*path)
+			eprintf("path was empty\n");
+		break;
+	case 'h':
+		usage();
+		exit(0);
+		break;
+	} ARGEND;
 
 	if (path)
 		printf("using provided path: %s\n", path);
 	else
 		default_path(&path);
-	return init(path);
+	init(path);
+	return 0;
 }
