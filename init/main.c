@@ -124,7 +124,7 @@ init(const char *path)
 static void
 usage(void)
 {
-	eprintf("usage: %s [-h] [-d DIR]\n", argv0);
+	printf("usage: %s [-h] [-d DIR]\n", argv0);
 }
 
 int

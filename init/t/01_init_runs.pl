@@ -79,6 +79,9 @@ my @cmds = (
       verify    => \&fail,
       clean     => clean_dir("$HOME/.booker"),
     },
+    { cmd       => ["./booker-init", "-h"],
+      verify    => \&pass,
+    },
 );
 
 my $exit = 0;

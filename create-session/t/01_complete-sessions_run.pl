@@ -24,9 +24,7 @@ $exit++ if system("./booker-create-session", "-d", "test-path");
 rmtree("test-path");
 
 $exit++ unless system("./booker-create-session", "-d");
-rmtree("test-path");
-
 $exit++ unless system("./booker-create-session", "-d", "");
-rmtree("test-path");
+$exit++ if system("./booker-create-session", "-h");
 
 exit $exit;

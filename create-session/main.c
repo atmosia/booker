@@ -11,13 +11,12 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-h] [-d DIR] -u USER\n", argv0);
+	printf("usage: %s [-h] [-d DIR] -u USER\n", argv0);
 }
 
 int
 main(int argc, char **argv)
 {
-	int i;
 	char *path;
 
 	path = NULL;
