@@ -16,6 +16,41 @@
 
 static const char *DEFAULT_CONFIG = "resources/config.ini";
 
+static const char *TABLE_LIST[] = {
+	"CREATE TABLE session ("
+		"start TIMESTAMP NOT NULL,"
+		"end TIMESTAMP"
+	")",
+	"CREATE TABLE session_user ("
+		"session_id INTEGER NOT NULL,"
+		"user TEXT NOT NULL,"
+		"FOREIGN KEY (session_id) REFERENCES session(rowid),"
+		"PRIMARY KEY (session_id, user)"
+	")",
+	"CREATE TABLE type ("
+		"name TEXT PRIMARY KEY NOT NULL"
+	")",
+	"CREATE TABLE product ("
+		"name TEXT NOT NULL,"
+		"price NUMBER NOT NULL,"
+		"qty NUMBER NOT NULL,"
+		"type TEXT NOT NULL,"
+		"cost NUMBER NOT NULL,"
+		"FOREIGN KEY (type) REFERENCES type(name),"
+		"PRIMARY KEY (name, type),"
+		"CHECK (price >= 0),"
+		"CHECK (cost >= 0)"
+	")",
+	"CREATE TABLE product_metadata ("
+		"product_id INTEGER NOT NULL,"
+		"key TEXT NOT NULL,"
+		"value TEXT NOT NULL,"
+		"FOREIGN KEY (product_id) REFERENCES product(rowid),"
+		"PRIMARY KEY (product_id, key)"
+	")",
+	NULL
+};
+
 static int cp(const char *src, const char *dest);
 static void create_config(const char *base);
 static void create_db(const char *base);
@@ -84,6 +119,7 @@ create_db(const char *base)
 {
 	sqlite3 *db;
 	char *path;
+	const char **tp;
 
 	path = db_path(base);
 	printf("creating a database at %s\n", path);
@@ -93,19 +129,9 @@ create_db(const char *base)
 		sqlite3_close(db);
 		abort();
 	}
-	db_exec(db,
-		"CREATE TABLE session ("
-			"start TIMESTAMP NOT NULL,"
-			"end TIMESTAMP"
-		")");
-	db_exec(db,
-		"CREATE TABLE session_user ("
-			"session_id INTEGER,"
-			"user TEXT,"
-			"FOREIGN KEY (session_id) REFERENCES session(rowid),"
-			"PRIMARY KEY (session_id, user)"
-		")");
 
+	for (tp = TABLE_LIST; *tp != NULL; tp++)
+		db_exec(db, *tp);
 	sqlite3_close(db);
 }
 

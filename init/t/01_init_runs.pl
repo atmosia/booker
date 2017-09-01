@@ -4,103 +4,59 @@ use v5.010;
 use strict;
 use warnings;
 
-use DBI;
-use File::Path qw(rmtree);
+use lib '../perl';
 
-sub pass {
-    $_[0]
-}
+use BookerTest qw(table_exists_sub fail clean_dir_sub run_tests
+                  dir_test_sub file_test_sub);
 
-sub fail {
-    !$_[0]
-}
-
-sub clean_dir {
-    my $tree = $_[0];
-    sub { rmtree($tree) }
-}
-
-sub table_exists_sub {
-    my ($file, $name) = @_;
-    sub {
-        my $dbh = DBI->connect("dbi:SQLite:dbname=$file/db.sqlite3", "", "");
-        my $stmt = $dbh->prepare("SELECT COUNT(*) FROM $name");
-        unless ($stmt) {
-            return 0;
-        }
-        $stmt->execute();
-        my $row = $stmt->fetchrow_arrayref();
-        return $row->[0] == 0;
-    }
-}
+my $HOME = $ENV{HOME};
 
 sub test_files {
-    my $path = $_[0];
-    [["create directory", sub { -d "$path" }],
-     ["create config", sub { -f "$path/config.ini" }],
-     ["create db", sub { -f "$path/db.sqlite3" }],
+    [dir_test_sub("create directory", $_[0]),
+     file_test_sub("create config", "$_[0]/config.ini"),
+     file_test_sub("create db", "$_[0]/db.sqlite3"),
     ]
 }
 
 sub test_db {
-    my $path = $_[0];
-    [["open session table", table_exists_sub($path, "session")],
-     ["open session_user table", table_exists_sub($path, "session_user")]
+   [table_exists_sub("open session table", $_[0], "session"),
+    table_exists_sub("open session_user table", $_[0], "session_user"),
+    table_exists_sub("open type table", $_[0], "type"),
+    table_exists_sub("open product table", $_[0], "product"),
     ]
 }
 
-my $HOME = $ENV{HOME};
-
-# TODO: test table creation
-my @cmds = (
-    { cmd       => ["./booker-init"],
-      verify    => \&pass,
+run_tests(
+    { name      => "default init",
+      cmd       => ["./booker-init"],
       tests     => [@{test_files("$HOME/.booker")},
                     @{test_db("$HOME/.booker")},
                    ],
-      clean     => clean_dir("$HOME/.booker"),
+      clean     => clean_dir_sub("$HOME/.booker"),
     },
-    { cmd       => ["./booker-init", "-d", "test-path"],
-      verify    => \&pass,
+    { name      => "custom init",
+      cmd       => ["./booker-init", "-d", "test-path"],
       tests     => [@{test_files("test-path")},
                     @{test_db("test-path")},
                    ],
-      clean     => clean_dir("test-path"),
+      clean     => clean_dir_sub("test-path"),
     },
-    { cmd       => ["./booker-init", "-d"],
+    { name      => "no directory",
+      cmd       => ["./booker-init", "-d"],
       verify    => \&fail,
       tests     => [["not create directory", sub { ! -d "$HOME/.booker" }]],
     },
-    { cmd       => ["./booker-init", "-d", ""],
+    { name      => "empty directory",
+      cmd       => ["./booker-init", "-d", ""],
       verify    => \&fail,
       tests     => [["not create directory", sub { ! -d "$HOME/.booker" }]],
     },
-    { cmd       => ["./booker-init; ./booker-init"],
+    { name      => "double initialization",
+      cmd       => ["./booker-init; ./booker-init"],
       verify    => \&fail,
-      clean     => clean_dir("$HOME/.booker"),
+      clean     => clean_dir_sub("$HOME/.booker"),
     },
-    { cmd       => ["./booker-init", "-h"],
-      verify    => \&pass,
+    { name      => "help",
+      cmd       => ["./booker-init", "-h"]
     },
 );
-
-my $exit = 0;
-for my $cmd (@cmds) {
-    my @cmd = @{$cmd->{cmd}};
-    printf("# running `@cmd'\n");
-    if ($cmd->{verify}(system(@cmd))) {
-        printf(STDERR "failed to run @cmd\n");
-        $exit = 1;
-    }
-    printf("# testing output\n");
-    for my $test (@{$cmd->{tests}}) {
-        unless ($test->[1]()) {
-            printf(STDERR "failed to $test->[0]\n");
-            $exit = 1;
-        }
-    }
-    printf("# cleaning up\n");
-    $cmd->{clean}() if $cmd->{clean};
-}
-
-exit $exit;
