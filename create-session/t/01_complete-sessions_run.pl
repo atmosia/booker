@@ -6,22 +6,9 @@ use warnings;
 
 use lib '../perl';
 
-use BookerTest qw(test_sql_statement clean_dir_sub run_tests fail);
-use Cwd;
+use BookerTest qw(test_sql_statement clean_dir_sub run_tests fail booker_init);
 
 my $HOME = $ENV{HOME};
-my $cd = getcwd;
-
-sub booker_init {
-    chdir("../init") || return 0;
-    if (@_) {
-        system("./booker-init", "-d", $_[0]) && return 0;
-    } else {
-        system("./booker-init") && return 0;
-    }
-    chdir($cd) || return 0;
-    return 1;
-}
 
 my @users;
 for my $i (0..10) {

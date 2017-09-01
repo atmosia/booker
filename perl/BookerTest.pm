@@ -3,6 +3,7 @@ package BookerTest;
 use strict;
 use warnings;
 
+use Cwd;
 use DBI;
 use Exporter;
 use File::Path qw(rmtree);
@@ -11,10 +12,23 @@ our $VERSION     = 1.00;
 our @ISA         = qw(Exporter);
 our @EXPORT      = ();
 our @EXPORT_OK   = qw(clean_dir_sub fail table_exists_sub run_tests
-                      dir_test_sub file_test_sub test_sql_statement);
+                      dir_test_sub file_test_sub test_sql_statement
+                      booker_init);
 our %EXPORT_TAGS = ( DEFAULT => [@EXPORT, @EXPORT_OK]
                    );
 sub fail { !$_[0] }
+
+sub booker_init {
+    my $cd = getcwd;
+    chdir("../init") || return 0;
+    if (@_) {
+        system("./booker-init", "-d", $_[0]) && return 0;
+    } else {
+        system("./booker-init") && return 0;
+    }
+    chdir($cd) || return 0;
+    return 1;
+}
 
 sub dir_test_sub {
     my ($name, $dir) = @_;
