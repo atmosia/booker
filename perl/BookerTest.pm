@@ -1,0 +1,87 @@
+package BookerTest;
+
+use strict;
+use warnings;
+
+use DBI;
+use Exporter;
+use File::Path qw(rmtree);
+
+our $VERSION     = 1.00;
+our @ISA         = qw(Exporter);
+our @EXPORT      = ();
+our @EXPORT_OK   = qw(clean_dir_sub fail table_exists_sub run_tests
+                      dir_test_sub file_test_sub);
+our %EXPORT_TAGS = ( DEFAULT => [@EXPORT, @EXPORT_OK]
+                   );
+sub fail { !$_[0] }
+
+sub dir_test_sub {
+    my ($name, $dir) = @_;
+    [$name, sub { -d $dir }]
+}
+
+sub file_test_sub {
+    my ($name, $file) = @_;
+    [$name, sub { -f $file }]
+}
+
+sub clean_dir_sub {
+    my $tree = $_[0];
+    sub { rmtree($tree) }
+}
+
+sub table_exists_sub {
+    my ($test_name, $file, $name) = @_;
+    [ $test_name,
+        sub {
+            my $dbh = DBI->connect("dbi:SQLite:dbname=$file/db.sqlite3",
+                "", "");
+            my $stmt = $dbh->prepare("SELECT COUNT(*) FROM $name");
+            unless ($stmt) {
+                return 0;
+            }
+            $stmt->execute();
+            my $row = $stmt->fetchrow_arrayref();
+            return $row->[0] == 0;
+        }
+    ]
+}
+
+sub run_tests {
+    my @tests = @_;
+
+    my $exit = 0;
+    for my $test (@tests) {
+        my $skip = 0;
+        my @cmd = @{$test->{cmd}};
+        printf("# running `@cmd'\n");
+        my $result = system(@cmd);
+        if ($test->{verify}) {
+            if ($test->{verify}($result)) {
+                printf(STDERR "failed to verify @cmd\n");
+                $exit = 1;
+                $skip = 1;
+            }
+        } elsif ($result) {
+            printf(STDERR "failed to run @cmd\n");
+            $exit = 1;
+            $skip = 1;
+        }
+        unless ($skip) {
+            printf("# testing output\n");
+            for my $check (@{$test->{tests}}) {
+                unless ($check->[1]()) {
+                    printf(STDERR "failed to $check->[0]\n");
+                    $exit = 1;
+                }
+            }
+        }
+        printf("# cleaning up\n");
+        $test->{clean}() if $test->{clean};
+    }
+
+    exit $exit;
+}
+
+1;
