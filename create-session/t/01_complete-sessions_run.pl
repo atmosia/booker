@@ -63,8 +63,9 @@ run_tests(
 
     { name      => "duplicate session",
       pre       => [ \&booker_init ],
-      cmd       => ["./booker-create-session", "-u", "user; " .
-                    "./booker-create-session", "-u", "user"],
+      cmd       => ["./booker-create-session -u user; " .
+                    "./booker-create-session -u user"],
+      verify    => \&fail,
       clean     => clean_dir_sub("$HOME/.booker"),
     },
 
