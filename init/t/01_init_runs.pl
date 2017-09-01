@@ -44,8 +44,10 @@ sub test_files {
 
 sub test_db {
     my $path = $_[0];
-    [["open session table", table_exists_sub($path, "session")],
-     ["open session_user table", table_exists_sub($path, "session_user")]
+   [["open session table", table_exists_sub($path, "session")],
+    ["open session_user table", table_exists_sub($path, "session_user")],
+    ["open type table", table_exists_sub($path, "type")],
+    ["open product table", table_exists_sub($path, "product")],
     ]
 }
 
