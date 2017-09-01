@@ -11,7 +11,7 @@ our $VERSION     = 1.00;
 our @ISA         = qw(Exporter);
 our @EXPORT      = ();
 our @EXPORT_OK   = qw(clean_dir_sub fail table_exists_sub run_tests
-                      dir_test_sub file_test_sub);
+                      dir_test_sub file_test_sub test_sql_statement);
 our %EXPORT_TAGS = ( DEFAULT => [@EXPORT, @EXPORT_OK]
                    );
 sub fail { !$_[0] }
@@ -34,17 +34,32 @@ sub clean_dir_sub {
 sub table_exists_sub {
     my ($test_name, $file, $name) = @_;
     [ $test_name,
-        sub {
-            my $dbh = DBI->connect("dbi:SQLite:dbname=$file/db.sqlite3",
-                "", "");
-            my $stmt = $dbh->prepare("SELECT COUNT(*) FROM $name");
-            unless ($stmt) {
-                return 0;
-            }
-            $stmt->execute();
-            my $row = $stmt->fetchrow_arrayref();
-            return $row->[0] == 0;
-        }
+      sub {
+          my $dbh = DBI->connect("dbi:SQLite:dbname=$file/db.sqlite3", "", "");
+          my $stmt = $dbh->prepare("SELECT COUNT(*) FROM $name");
+          unless ($stmt) {
+              return 0;
+          }
+          $stmt->execute();
+          my $row = $stmt->fetchrow_arrayref();
+          return $row->[0] == 0;
+      }
+    ]
+}
+
+sub test_sql_statement {
+    my ($test_name, $file, $query, $test) = @_;
+    [ $test_name,
+      sub {
+          my $dbh = DBI->connect("dbi:SQLite:dbname=$file/db.sqlite3", "", "");
+          my $rows = $dbh->selectrow_arrayref($query);
+          unless ($rows) {
+              $dbh->disconnect;
+              return 0;
+          }
+          $dbh->disconnect;
+          return $test->($rows)
+      }
     ]
 }
 
@@ -55,6 +70,17 @@ sub run_tests {
     for my $test (@tests) {
         my $skip = 0;
         my @cmd = @{$test->{cmd}};
+        printf("# running \"$test->{name}\"\n") if ($test->{name});
+        if ($test->{pre}) {
+            printf("# running precommands\n");
+            for my $pre (@{$test->{pre}}) {
+                if (! $pre->()) {
+                    printf(STDERR "failed to run precommand\n");
+                    $exit = 1;
+                    $skip = 1;
+                }
+            }
+        }
         printf("# running `@cmd'\n");
         my $result = system(@cmd);
         if ($test->{verify}) {
@@ -79,6 +105,7 @@ sub run_tests {
         }
         printf("# cleaning up\n");
         $test->{clean}() if $test->{clean};
+        printf("\n");
     }
 
     exit $exit;
