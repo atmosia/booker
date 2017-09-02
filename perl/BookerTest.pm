@@ -13,22 +13,38 @@ our @ISA         = qw(Exporter);
 our @EXPORT      = ();
 our @EXPORT_OK   = qw(clean_dir_sub fail table_exists_sub run_tests
                       dir_test_sub file_test_sub test_sql_statement
-                      booker_init);
+                      booker_init booker_create_session);
 our %EXPORT_TAGS = ( DEFAULT => [@EXPORT, @EXPORT_OK]
                    );
 sub fail { !$_[0] }
 
 sub booker_init {
     my $cd = getcwd;
+    my $ret = 1;
     chdir("../init") || return 0;
     if (@_) {
-        system("./booker-init", "-d", $_[0]) && return 0;
+        $ret = system("./booker-init", "-d", $_[0]) ? 0 : 1;
     } else {
-        system("./booker-init") && return 0;
+        $ret = system("./booker-init") ?  0 : 1;
     }
     chdir($cd) || return 0;
-    return 1;
+    return $ret;
 }
+sub booker_create_session {
+    my $cd = getcwd;
+    my $ret = 1;
+    chdir("../create-session") || return 0;
+    system("ls");
+    if (@_) {
+        $ret = system("./booker-create-session", "-d", $_[0], "-u", "user")
+	       ? 0 : 1;
+    } else {
+        $ret = system("./booker-create-session", "-u", "user") ? 0 : 1;
+    }
+    chdir($cd) || return 0;
+    return $ret;
+}
+
 
 sub dir_test_sub {
     my ($name, $dir) = @_;
