@@ -34,7 +34,6 @@ sub booker_create_session {
     my $cd = getcwd;
     my $ret = 1;
     chdir("../create-session") || return 0;
-    system("ls");
     if (@_) {
         $ret = system("./booker-create-session", "-d", $_[0], "-u", "user")
 	       ? 0 : 1;
