@@ -52,7 +52,31 @@ create_session(sqlite3 *db)
 	rc = sqlite3_step(stmt);
 	assert(rc == SQLITE_ROW);
 
-	ret = sqlite3_column_int64(stmt, 0) > 0;
+	ret = sqlite3_column_int64(stmt, 0);
+	assert(sqlite3_finalize(stmt) == SQLITE_OK);
+	return ret;
+}
+
+unsigned long
+current_sesion(sqlite3 *db)
+{
+	sqlite3_stmt *stmt;
+	const char *unused;
+	long ret;
+	int rc;
+
+	rc = sqlite3_prepare_v2(db,
+			"SELECT rowid FROM session WHERE end IS NULL",
+			-1,
+			&stmt,
+			&unused);
+	assert(rc == SQLITE_OK);
+	assert(*unused == '\0');
+
+	rc = sqlite3_step(stmt);
+	assert(rc == SQLITE_ROW);
+
+	ret = sqlite3_column_int64(stmt, 0);
 	assert(sqlite3_finalize(stmt) == SQLITE_OK);
 	return ret;
 }
