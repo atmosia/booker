@@ -18,10 +18,9 @@ usage(void)
 int
 main(int argc, char **argv)
 {
-	char *path;
+	char *path = NULL;
 	const char *type;
 
-	path = NULL;
 	ARGBEGIN {
 	case 'd':
 		path = EARGF(usage());
@@ -31,7 +30,6 @@ main(int argc, char **argv)
 	case 'h':
 		usage();
 		exit(0);
-		break;
 	} ARGEND;
 
 
