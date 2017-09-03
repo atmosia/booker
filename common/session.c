@@ -60,7 +60,7 @@ void
 destroy_session(sqlite3 *db)
 {
 	db_exec(db,
-	"UPDATE session SET end=datetime('now') WHERE end IS NULL");
+		"UPDATE session SET end=datetime('now') WHERE end IS NULL");
 }
 int
 valid_session(sqlite3 *db)

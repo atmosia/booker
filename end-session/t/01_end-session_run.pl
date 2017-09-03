@@ -15,7 +15,7 @@ my $cd = getcwd;
 
 run_tests(
     { name  => "Normal session end",
-      pre       => [ \&booker_init, \&booker_create_session ],
+      pre   => [ \&booker_init, \&booker_create_session ],
       cmd   => ["./booker-end-session"],
       tests => [ test_sql_statement(
                     "counting special session users",
