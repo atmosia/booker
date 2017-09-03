@@ -20,7 +20,7 @@ run_tests(
       tests => [ test_sql_statement(
                     "counting special session users",
                     "$HOME/.booker",
-                    "SELECT COUNT(*) FROM session_user WHERE user = 'user'",
+                    "SELECT COUNT(*) FROM session WHERE end IS NOT NULL",
                     sub { $_[0]->[0] == 1 })
                ],
       clean => clean_dir_sub("$HOME/.booker")
@@ -35,7 +35,7 @@ run_tests(
       tests => [ test_sql_statement(
                     "counting special session users",
                     "test-path",
-                    "SELECT COUNT(*) FROM session_user WHERE user = 'user'",
+                    "SELECT COUNT(*) FROM session WHERE end IS NOT NULL",
                     sub { $_[0]->[0] == 1 })
                ],
       clean => clean_dir_sub("test-path")
