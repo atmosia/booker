@@ -61,6 +61,7 @@ init/booker-init
 create-session/booker-create-session
 list-products/booker-list-products
 add-product/booker-add-product
+end-session/booker-end-session
 
 # vim files
 *.swp
