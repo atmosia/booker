@@ -3,6 +3,7 @@
 APP = add-product
 
 SRC = main.c
+EXTERN_OBJ = "../common/eprintf.o"
 
 include ../config.mk
 include ../default.mk

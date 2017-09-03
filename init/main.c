@@ -18,8 +18,8 @@ static const char *DEFAULT_CONFIG = "resources/config.ini";
 
 static const char *TABLE_LIST[] = {
 	"CREATE TABLE session ("
-		"start TIMESTAMP NOT NULL,"
-		"end TIMESTAMP"
+		"start DATETIME NOT NULL,"
+		"end DATETIME"
 	")",
 	"CREATE TABLE session_user ("
 		"session_id INTEGER NOT NULL,"
