@@ -27,9 +27,16 @@ static const char *TABLE_LIST[] = {
 		"FOREIGN KEY (session_id) REFERENCES session(rowid),"
 		"PRIMARY KEY (session_id, user)"
 	")",
-	"CREATE TABLE type ("
-		"name TEXT PRIMARY KEY NOT NULL"
+	"CREATE TABLE type_log ("
+		"name TEXT NOT NULL,"
+		"added DATETIME NOT NULL,"
+		"removed DATETIME,"
+
+		"PRIMARY KEY (name, added),"
+		"CHECK (added < removed)"
 	")",
+	"CREATE VIEW type (name) AS "
+		"SELECT name FROM type_log WHERE removed IS NULL",
 	"CREATE TABLE product ("
 		"name TEXT NOT NULL,"
 		"price NUMBER NOT NULL,"

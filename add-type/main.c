@@ -32,7 +32,6 @@ main(int argc, char **argv)
 		exit(0);
 	} ARGEND;
 
-
 	if (path)
 		printf("using provided path: %s\n", path);
 	else
