@@ -35,8 +35,7 @@ static const char *TABLE_LIST[] = {
 		"PRIMARY KEY (name, added),"
 		"CHECK (added < removed)"
 	")",
-	"CREATE VIEW type (name) AS "
-		"SELECT name FROM type_log WHERE removed IS NULL",
+	"CREATE VIEW type AS SELECT name FROM type_log WHERE removed IS NULL",
 	"CREATE TABLE product ("
 		"name TEXT NOT NULL,"
 		"price NUMBER NOT NULL,"
