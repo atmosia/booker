@@ -24,8 +24,9 @@ add_type(sqlite3 *db, const char *type)
 
 	sqlite3_bind_text(stmt, 1, type, -1, SQLITE_STATIC);
 	rc = sqlite3_step(stmt);
-	if (rc == SQLITE_CONSTRAINT)
+	if (rc == SQLITE_CONSTRAINT) {
 		eprintf("%s: type %s already exists", argv0, type);
+	}
 	assert(rc == SQLITE_DONE);
 	assert(sqlite3_finalize(stmt) == SQLITE_OK);
 }

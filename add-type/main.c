@@ -39,8 +39,9 @@ main(int argc, char **argv)
 	type = *argv;
 
 	sqlite3 *db = default_db(path);
-	if (!valid_session(db))
+	if (!valid_session(db)) {
 		eprintf("not in a session\n");
+	}
 	add_type(db, type);
 
 	return 0;
