@@ -10,8 +10,9 @@ add_type(sqlite3 *db, const char *type)
 	sqlite3_stmt *stmt;
 	const char *unused;
 
-	if (type_exists(db, type))
+	if (type_exists(db, type)) {
 		eprintf("%s already exists\n", type);
+	}
 
 	rc = sqlite3_prepare_v2(db,
 			"INSERT INTO type_log(name, added) "
