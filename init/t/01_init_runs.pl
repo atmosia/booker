@@ -21,7 +21,7 @@ sub test_files {
 sub test_db {
    [table_exists_sub("open session table", $_[0], "session"),
     table_exists_sub("open session_user table", $_[0], "session_user"),
-    table_exists_sub("open type table", $_[0], "type"),
+    table_exists_sub("open type table", $_[0], "type_log"),
     table_exists_sub("open product table", $_[0], "product"),
     ]
 }

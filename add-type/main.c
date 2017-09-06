@@ -24,24 +24,26 @@ main(int argc, char **argv)
 	ARGBEGIN {
 	case 'd':
 		path = EARGF(usage());
-		if (!*path)
+		if (!*path) {
 			eprintf("path was emtpy\n");
+		}
 		break;
 	case 'h':
 		usage();
 		exit(0);
 	} ARGEND;
 
-
-	if (path)
+	if (path) {
 		printf("using provided path: %s\n", path);
-	else
+	} else {
 		default_path(&path);
+	}
 	type = *argv;
 
 	sqlite3 *db = default_db(path);
-	if (!valid_session(db))
+	if (!valid_session(db)) {
 		eprintf("not in a session\n");
+	}
 	add_type(db, type);
 
 	return 0;
