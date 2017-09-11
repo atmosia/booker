@@ -28,9 +28,7 @@ test: all
 	@for test in ${TESTS}; do \
 		$$test; \
 	done
-	ifdef COV
-		@${COV} ${SRC}
-	endif
+	@if test -z "$$COV"; then ${COV} ${SRC}; fi
 
 clean:
 	@echo cleaning
