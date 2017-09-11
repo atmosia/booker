@@ -44,3 +44,16 @@ extern char *argv0;
 				(brk_ = 1, (argv[0][1] != '\0')?\
 					(&argv[0][1]) :\
 					(argc--, argv++, argv[0])))
+
+#define COMMON_ARGS \
+	case 'd':\
+		path = EARGF(usage());\
+		if (!*path) {\
+			eprintf("path was empty\n");\
+		}\
+		break;\
+	case 'h':\
+		usage();\
+		exit(0);\
+		break
+
