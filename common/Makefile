@@ -5,7 +5,7 @@ include ../config.mk
 SRC = $(wildcard *.c)
 OBJ = ${SRC:.c=.o}
 CPPFLAGS += -I../include
-LDFLAGS += -L../lib -lsqlite3 -lpthread -ldl
+LDFLAGS += -L../lib -lsqlite3 -lpthread
 
 all: options ${OBJ}
 
