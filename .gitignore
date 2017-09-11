@@ -70,3 +70,6 @@ add-type/booker-add-type
 # dependency files
 lib
 include
+
+# local files
+local.mk
