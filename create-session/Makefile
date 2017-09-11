@@ -9,5 +9,4 @@ EXTERN_OBJ = "../common/db.o" "../common/eprintf.o" "../common/path.o" \
 include ../config.mk
 include ../default.mk
 
-CPPFLAGS += -I../include
-LDFLAGS += -L../lib -lsqlite3 -lpthread
+LDFLAGS += -lsqlite3
