@@ -23,15 +23,7 @@ exists(const char *path)
 void
 default_path(char **path)
 {
-	char *home;
-	size_t home_len;
-
-	home = getenv("HOME");
-	home_len = strlen(home);
-	*path = malloc(home_len + strlen(PATH_SUFFIX) + 1);
-	assert(path);
-	strncpy(*path, home, home_len);
-	strncpy(*path + home_len, PATH_SUFFIX, strlen(PATH_SUFFIX));
+	*path = build_path(getenv("HOME"), PATH_SUFFIX);
 	printf("using default path: %s\n", *path);
 }
 
@@ -42,13 +34,15 @@ char*
 build_path(const char *base, const char *suffix)
 {
 	char *path;
-	size_t base_len;
+	size_t base_len, suffix_len;
 
 	base_len = strlen(base);
-	path = malloc(base_len + strlen(suffix) + 1);
+	suffix_len = strlen(suffix);
+	path = malloc(base_len + suffix_len + 1);
 	assert(path);
 	strncpy(path, base, base_len);
-	strncpy(path + base_len, suffix, strlen(suffix));
+	strncpy(path + base_len, suffix, suffix_len);
+	*(path + base_len + suffix_len) = '\0';
 
 	return path;
 }
