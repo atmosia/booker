@@ -22,15 +22,7 @@ main(int argc, char **argv)
 	const char *type;
 
 	ARGBEGIN {
-	case 'd':
-		path = EARGF(usage());
-		if (!*path) {
-			eprintf("path was emtpy\n");
-		}
-		break;
-	case 'h':
-		usage();
-		exit(0);
+	COMMON_ARGS;
 	} ARGEND;
 
 	if (path) {
