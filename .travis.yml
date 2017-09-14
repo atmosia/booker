@@ -9,10 +9,11 @@ before_install:
   - pip install --user cpp-coveralls
 install:
   - sudo apt-get update
-  - sudo apt-get install musl-tools libdbd-sqlite3-perl
+  - sudo apt-get install musl-tools libdbd-sqlite3-perl libsqlite3-dev
   - ./build_static_sqlite.sh
 script:
+  - cp travis-local.mk local.mk
   # TODO: update this to link against libmusl
-  - make CC=gcc test
+  - make test
 after_success:
   - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
