@@ -26,12 +26,12 @@ main(int argc, char **argv)
 	path = NULL;
 	user_count = 0;
 	ARGBEGIN {
+	COMMON_ARGS;
 	case 'u':
 		if (user_count >= MAX_USERS)
 			eprintf("max users exceeded (%d max)\n", MAX_USERS);
 		users[user_count++] = EARGF(usage());
 		break;
-	COMMON_ARGS;
 	} ARGEND;
 
 	if (user_count < 1)
