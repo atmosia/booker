@@ -13,6 +13,8 @@
 #include "../common/path.h"
 #include "../common/util.h"
 
+#define BUFSIZE 8192
+
 static const char *DEFAULT_CONFIG = "resources/config.ini";
 
 static const char *TABLE_LIST[] = {
@@ -66,7 +68,7 @@ static int
 cp(const char *src, const char *dest)
 {
 	int in_fd, out_fd;
-	char buf[8192];
+	char buf[BUFSIZE];
 	ssize_t result;
 
 	in_fd = open(src, O_RDONLY);
@@ -82,9 +84,7 @@ cp(const char *src, const char *dest)
 		return 0;
 	}
 
-	while (1) {
-		result = read(in_fd, buf, sizeof(buf));
-		if (!result) break;
+	while ((result = read(in_fd, buf, sizeof(buf)))) {
 		assert(result > 0);
 		assert(write(out_fd, buf, result) == result);
 	}
@@ -136,8 +136,9 @@ create_db(const char *base)
 void
 init(const char *path)
 {
-	if (exists(path))
+	if (exists(path)) {
 		eprintf("%s is already initialized\n", path);
+	}
 	assert(!mkdir(path, 0755));
 	assert(create_config(path));
 	create_db(path);

@@ -49,7 +49,7 @@ extern char *argv0;
 	case 'd':\
 		path = EARGF(usage());\
 		if (!*path) {\
-			eprintf("path was empty\n");\
+			eprintf("no path provided\n");\
 		}\
 		break;\
 	case 'h':\
