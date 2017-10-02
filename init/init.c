@@ -14,8 +14,8 @@
 #include "../common/util.h"
 
 #define BUFSIZE 8192
-
-static const char *DEFAULT_CONFIG = "resources/config.ini";
+#define DEFAULT_PERMISSIONS 0755
+#define DEFAULT_CONFIG "resources/config.ini"
 
 static const char *TABLE_LIST[] = {
 	"CREATE TABLE session ("
@@ -139,7 +139,7 @@ init(const char *path)
 	if (exists(path)) {
 		eprintf("%s is already initialized\n", path);
 	}
-	assert(!mkdir(path, 0755));
+	assert(!mkdir(path, DEFAULT_PERMISSIONS));
 	assert(create_config(path));
 	create_db(path);
 }
