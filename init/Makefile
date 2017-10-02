@@ -2,7 +2,7 @@
 
 APP = init
 
-SRC = main.c
+SRC = main.c init.c
 EXTERN_OBJ = "../common/db.o" "../common/eprintf.o" "../common/path.o"
 
 include ../config.mk

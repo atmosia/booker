@@ -21,15 +21,7 @@ main(int argc, char **argv)
 
 	path = NULL;
 	ARGBEGIN {
-	case 'd':
-		path = EARGF(usage());
-		if (!*path)
-			eprintf("path was emtpy\n");
-		break;
-	case 'h':
-		usage();
-		exit(0);
-		break;
+	COMMON_ARGS;
 	} ARGEND;
 
 	if (path)

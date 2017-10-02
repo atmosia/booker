@@ -26,19 +26,11 @@ main(int argc, char **argv)
 	path = NULL;
 	user_count = 0;
 	ARGBEGIN {
-	case 'd':
-		path = EARGF(usage());
-		if (!*path)
-			eprintf("path was emtpy\n");
-		break;
+	COMMON_ARGS;
 	case 'u':
 		if (user_count >= MAX_USERS)
 			eprintf("max users exceeded (%d max)\n", MAX_USERS);
 		users[user_count++] = EARGF(usage());
-		break;
-	case 'h':
-		usage();
-		exit(0);
 		break;
 	} ARGEND;
 
